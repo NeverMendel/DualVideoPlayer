@@ -1,3 +1,5 @@
+![icon](img/icon.png | width=260)
+
 # Dual Video Player
 
 > Basic webpage used to play two videos side by side. Written in HTML, CSS and Vanilla JavaScript.
