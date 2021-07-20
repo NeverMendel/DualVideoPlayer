@@ -64,14 +64,30 @@ function dropHandler(ev) {
         namesParagraph.innerHTML += "<br>" + file.name;
     }
 
-    // Optional feature: set offset automatically if video duration differs
-    // setTimeout(function(){
-    //     let durationDiff = webcamVideo.duration - mainVideo.duration;
-    //     offsetInput.value = durationDiff;
-    //     console.log("Video duration diff: " + durationDiff);
-    //     syncVideos();
-    // }, 1000);
+    let storedItem = localStorage.getItem(files[0].name);
 
+    if(storedItem){
+        let info = JSON.parse(storedItem);
+        mainVideo.currentTime = info.time;
+        offsetInput.value = info.offset;
+        syncVideos();
+    }
+
+    setInterval(updateStoredTime, 5000);
+
+    // Optional feature: set offset automatically if video duration differs
+    // let durationDiff = webcamVideo.duration - mainVideo.duration;
+    // offsetInput.value = durationDiff;
+    // console.log("Video duration diff: " + durationDiff);
+    // syncVideos();
+}
+
+function updateStoredTime(){
+    let info = {};
+    info.time = parseInt(mainVideo.currentTime);
+    info.offset = offsetInput.value;
+    localStorage.setItem(files[0].name, JSON.stringify(info));
+    console.log("Saved current time " + info);
 }
 
 function pauseVideos() {
@@ -100,7 +116,7 @@ function changePlaybackSpeed(){
     mainVideo.playbackRate = playbackSpeedInput.value;
 }
 
-function swapVideos(ev) {
+function swapVideos() {
     let timeMainVideo = mainVideo.currentTime;
     let timeWebcamVideo = webcamVideo.currentTime;
     let temp = webcamVideo.src;
