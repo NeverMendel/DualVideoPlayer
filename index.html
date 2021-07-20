@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Dual Video Player</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<div class="container">
+    <div id="drop_zone" ondrop="dropHandler(event)" ondragover="dragOverHandler(event)">
+        <p>Drag two videos here</p>
+    </div>
+    <div id="player" style="display: none">
+        <div id="video_container">
+            <video id="webcam_video" autoplay></video>
+            <video id="main_video" controls autoplay></video>
+        </div>
+        <div id="info_div">
+            <div id="description">
+                <p id="names_paragraph">Video names not found</p>
+                <div id="time_info_div">
+                    <button id="show_time_info_button">Show time info</button><br>
+                    <p id="time_info_paragraph" style="display: none"></p>
+                </div>
+            </div>
+            <button id="hide_webcam">Hide webcam video</button>
+            <button id="hide_main">Hide main video</button>
+
+            <label for="offset">Video Offset (s):</label>
+            <input type="number" id="offset" name="offset" step="0.1" min="-1000" max="1000" value="0">
+
+            <label for="playback_speed">Playback Speed (multiplier):</label>
+            <input type="number" id="playback_speed" name="playback_speed" step="0.1" min="0.1" max="5" value="1">
+
+            <label for="swap_button">Swap videos:</label>
+            <button id="swap_button"><img src="img/swap-icon.svg"></button>
+        </div>
+    </div>
+</div>
+<script src="main.js"></script>
+</body>
+</html>
