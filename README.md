@@ -1,8 +1,8 @@
-![icon](img/icon.png | width=260)
+<img src="img/icon.png" alt="icon" width="256">
 
 # Dual Video Player
 
-> Basic webpage used to play two videos side by side. Written in HTML, CSS and Vanilla JavaScript.
+> Barebone webpage used to play two videos side by side. Written in HTML, CSS and Vanilla JavaScript.
 
 This webpage is meant to play recordings of lectures that are stored locally, where there are two videos, the webcam and the screen recording.
 
