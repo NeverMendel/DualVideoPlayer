@@ -8,9 +8,7 @@
 </head>
 <body>
 <div class="container">
-    <div id="drop_zone" ondrop="dropHandler(event)" ondragover="dragOverHandler(event)">
-        <p>Drag two videos here</p>
-    </div>
+    <h2 id="drag_header">Drag two videos here</h2>
     <div id="player" style="display: none">
         <div id="video_container">
             <video id="webcam_video" autoplay></video>
@@ -20,7 +18,8 @@
             <div id="description">
                 <p id="names_paragraph">Video names not found</p>
                 <div id="time_info_div">
-                    <button id="show_time_info_button">Show time info</button><br>
+                    <button id="show_time_info_button">Show time info</button>
+                    <br>
                     <p id="time_info_paragraph" style="display: none"></p>
                 </div>
             </div>

@@ -9,7 +9,8 @@ let updateInfoIntervalId;
 
 // DOM Elements
 
-let dropZoneDiv = document.getElementById("drop_zone");
+let dragHeader = document.getElementById("drag_header");
+// let dropZoneDiv = document.getElementById("drop_zone");
 let playerDiv = document.getElementById("player");
 let mainVideo = document.getElementById("main_video");
 let webcamVideo = document.getElementById("webcam_video");
@@ -24,6 +25,9 @@ let playbackSpeedInput = document.getElementById("playback_speed");
 let swapButton = document.getElementById("swap_button");
 
 // Event listeners
+
+document.body.addEventListener("drop", dropHandler);
+document.body.addEventListener("dragover", dragOverHandler);
 
 mainVideo.addEventListener("pause", pauseVideos);
 mainVideo.addEventListener("play", playVideos);
@@ -52,21 +56,24 @@ function dropHandler(ev) {
         alert("You need to drag two and only two videos");
         return;
     }
-    files.sort(function(a, b){return a.name.localeCompare(b.name)});
+    files.sort(function (a, b) {
+        return a.name.localeCompare(b.name)
+    });
     webcamVideo.src = URL.createObjectURL(files[0]);
     mainVideo.src = URL.createObjectURL(files[1]);
 
+    dragHeader.style.display = 'none';
+    document.body.style.textAlign = 'left';
     playerDiv.style.display = 'unset';
-    dropZoneDiv.style.display = 'none';
 
     namesParagraph.innerHTML = "Video names:";
-    for(let file of files){
+    for (let file of files) {
         namesParagraph.innerHTML += "<br>" + file.name;
     }
 
     let storedItem = localStorage.getItem(files[0].name);
 
-    if(storedItem){
+    if (storedItem) {
         let info = JSON.parse(storedItem);
         mainVideo.currentTime = info.time;
         offsetInput.value = info.offset;
@@ -82,7 +89,7 @@ function dropHandler(ev) {
     // syncVideos();
 }
 
-function updateStoredTime(){
+function updateStoredTime() {
     let info = {};
     info.time = parseInt(mainVideo.currentTime);
     info.offset = offsetInput.value;
@@ -111,7 +118,7 @@ function syncVideos() {
     console.log("Webcam video duration: " + webcamVideo.duration);
 }
 
-function changePlaybackSpeed(){
+function changePlaybackSpeed() {
     webcamVideo.playbackRate = playbackSpeedInput.value;
     mainVideo.playbackRate = playbackSpeedInput.value;
 }
@@ -122,15 +129,15 @@ function swapVideos() {
     let temp = webcamVideo.src;
     webcamVideo.src = mainVideo.src;
     mainVideo.src = temp;
-    setTimeout(function(){
+    setTimeout(function () {
         mainVideo.currentTime = timeMainVideo;
         webcamVideo.currentTime = timeWebcamVideo;
         offsetInput.value = -offsetInput.value;
     }, 100);
 }
 
-function showInfo(){
-    if(timeInfoParagraph.style.display === 'none'){
+function showInfo() {
+    if (timeInfoParagraph.style.display === 'none') {
         timeInfoParagraph.style.display = 'unset';
         showInfoButton.innerHTML = "Hide time info";
         updateInfo();
@@ -142,9 +149,9 @@ function showInfo(){
     }
 }
 
-function updateInfo(){
+function updateInfo() {
     timeInfoParagraph.innerHTML = "Webcam video: " + parseInt(webcamVideo.currentTime) + "/" + parseInt(webcamVideo.duration) + "<br>" +
-                              "Main video  : " + parseInt(mainVideo.currentTime) + "/" + parseInt(mainVideo.duration);
+        "Main video  : " + parseInt(mainVideo.currentTime) + "/" + parseInt(mainVideo.duration);
 }
 
 function hideWebcam() {
