@@ -3,16 +3,16 @@ html {
 }
 
 body {
-    background: #eee;
-    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
-    font-size: 16px;
-    line-height: 1.5;
     height: 100%;
     text-align: center;
 }
 
 #description {
     display: flex;
+}
+
+#player {
+    display: none;
 }
 
 #video_container {
@@ -28,8 +28,8 @@ body {
     max-width: 74%;
 }
 
-#show_time_info_button {
-    margin-top: 18px;
+#names_paragraph {
+    margin-top: 6px;
 }
 
 #time_info_div {
