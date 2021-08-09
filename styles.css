@@ -7,15 +7,15 @@ body {
     text-align: center;
 }
 
-#description {
+.description_div {
     display: flex;
 }
 
-#player {
+#player_div {
     display: none;
 }
 
-#video_container {
+.video_container {
     display: flex;
 }
 
@@ -25,16 +25,17 @@ body {
 }
 
 #main_video {
-    max-width: 74%;
+    max-width: 75%;
 }
 
-#names_paragraph {
-    margin-top: 6px;
-}
-
-#time_info_div {
+.info_div {
     margin-left: 1em;
 }
 
+#names_paragraph {
+    margin-top: 14px;
+}
 
-
+#time_div {
+    margin-left: 1em;
+}

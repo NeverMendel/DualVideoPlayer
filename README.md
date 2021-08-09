@@ -14,6 +14,14 @@ Open [this webpage](https://NeverMendel.github.io/DualVideoPlayer/), drag and dr
 
 Use the controls in the webpage to change the video settings.
 
+
+# Preview
+
+<img src="img/Light%20mode.png" alt="Light mode preview image" width="960">
+
+
+<img src="img/Dark%20mode.png" alt="Dark mode preview image" width="960">
+
 ## License
 
 [MIT License](LICENSE)

@@ -8,22 +8,26 @@ let files = [];
 let updateInfoIntervalId;
 let webcamLinked = true;
 
+// Constants
+
+const LOAD_VIDEO_DELAY_MS = 300;
+
 // DOM Elements
 
 let dragHeader = document.getElementById("drag_header");
 // let dropZoneDiv = document.getElementById("drop_zone");
-let playerDiv = document.getElementById("player");
+let playerDiv = document.getElementById("player_div");
 let mainVideo = document.getElementById("main_video");
 let webcamVideo = document.getElementById("webcam_video");
 let namesParagraph = document.getElementById("names_paragraph");
-let timeInfoParagraph = document.getElementById("time_info_paragraph");
+let timeInfoDiv = document.getElementById("time_info_div");
 
 let showInfoButton = document.getElementById("show_time_info_button");
 let hideWebcamButton = document.getElementById("hide_webcam_button");
 let hideMainButton = document.getElementById("hide_main_button");
 let unlinkWebcamButton = document.getElementById("unlink_webcam_button");
-let offsetInput = document.getElementById("offset");
-let playbackSpeedInput = document.getElementById("playback_speed");
+let offsetInput = document.getElementById("offset_input");
+let playbackSpeedInput = document.getElementById("playback_speed_input");
 let swapButton = document.getElementById("swap_button");
 
 // Event listeners
@@ -31,8 +35,8 @@ let swapButton = document.getElementById("swap_button");
 document.body.addEventListener("drop", dropHandler);
 document.body.addEventListener("dragover", dragOverHandler);
 
-mainVideo.addEventListener("pause", pauseVideos);
-mainVideo.addEventListener("play", playVideos);
+mainVideo.addEventListener("pause", pauseVideo);
+mainVideo.addEventListener("play", playVideo);
 
 mainVideo.addEventListener("seeked", syncVideos);
 offsetInput.addEventListener("change", syncVideos);
@@ -84,10 +88,14 @@ function dropHandler(ev) {
     if (storedItem) {
         let info = JSON.parse(storedItem);
         setTimeout(function () {
-            mainVideo.currentTime = info.time;
             offsetInput.value = info.offset;
-            syncVideos();
-        }, 100);
+            mainVideo.currentTime = info.time;
+            mainVideo.play();
+        }, LOAD_VIDEO_DELAY_MS);
+    } else {
+        setTimeout(function () {
+            mainVideo.play();
+        }, LOAD_VIDEO_DELAY_MS);
     }
 
     setInterval(updateStoredTime, 5000);
@@ -107,30 +115,34 @@ function updateStoredTime() {
     // console.log("Saved video current time in browser local storage");
 }
 
-function pauseVideos() {
-    mainVideo.pause();
+function pauseVideo() {
     if (webcamLinked) {
         webcamVideo.pause();
-        syncVideos();
+        // syncVideos();
     }
 }
 
-function playVideos() {
-    mainVideo.play();
+function playVideo() {
     if (webcamLinked) {
         webcamVideo.play();
-        syncVideos();
+        // syncVideos();
     }
 }
 
 function syncVideos() {
     if (webcamLinked) {
+        let playing = isVideoPlaying(mainVideo);
+        if (playing)
+            mainVideo.pause();
         let timeMainVideo = mainVideo.currentTime;
         let timeWebcamVideo = timeMainVideo + parseInt(offsetInput.value);
         webcamVideo.currentTime = timeWebcamVideo >= 0 && timeWebcamVideo <= webcamVideo.duration ? timeWebcamVideo : 0;
+        if (playing)
+            mainVideo.play();
         console.groupCollapsed("Videos synced");
         console.log("Main video time: " + timeMainVideo);
         console.log("Computed webcam video time: " + timeMainVideo);
+        console.log("Offset: " + offsetInput.value);
         console.log("Webcam video duration: " + webcamVideo.duration);
         console.groupEnd();
     }
@@ -142,33 +154,33 @@ function changePlaybackSpeed() {
 }
 
 function swapVideos() {
-    let timeMainVideo = mainVideo.currentTime;
+    let playing = isVideoPlaying(mainVideo);
     let timeWebcamVideo = webcamVideo.currentTime;
     let temp = webcamVideo.src;
     webcamVideo.src = mainVideo.src;
     mainVideo.src = temp;
+    offsetInput.value = -offsetInput.value;
     setTimeout(function () {
-        mainVideo.currentTime = timeMainVideo;
-        webcamVideo.currentTime = timeWebcamVideo;
-        offsetInput.value = -offsetInput.value;
-    }, 100);
+        mainVideo.currentTime = timeWebcamVideo;
+        if (playing) mainVideo.play();
+    }, LOAD_VIDEO_DELAY_MS);
 }
 
 function showInfo() {
-    if (timeInfoParagraph.style.display === 'none') {
-        timeInfoParagraph.style.display = 'unset';
+    if (timeInfoDiv.style.display === 'none') {
+        timeInfoDiv.style.display = 'unset';
         showInfoButton.innerHTML = "Hide time info";
         updateInfo();
         updateInfoIntervalId = setInterval(updateInfo, 1000);
     } else {
         showInfoButton.innerHTML = "Show time info";
         clearInterval(updateInfoIntervalId);
-        timeInfoParagraph.style.display = 'none';
+        timeInfoDiv.style.display = 'none';
     }
 }
 
 function updateInfo() {
-    timeInfoParagraph.innerHTML = "Webcam video: " + parseInt(webcamVideo.currentTime) + "/" + parseInt(webcamVideo.duration) + "<br>" +
+    timeInfoDiv.innerHTML = "Webcam video: " + parseInt(webcamVideo.currentTime) + "/" + parseInt(webcamVideo.duration) + "<br>" +
         "Main video  : " + parseInt(mainVideo.currentTime) + "/" + parseInt(mainVideo.duration);
 }
 
@@ -193,7 +205,6 @@ function hideMain() {
 }
 
 function unlinkWebcam() {
-    console.log("test");
     if (webcamLinked) {
         webcamLinked = false;
         webcamVideo.pause();
@@ -205,4 +216,8 @@ function unlinkWebcam() {
         if (!mainVideo.paused) webcamVideo.play();
         unlinkWebcamButton.innerHTML = "Freeze and unlink webcam video";
     }
+}
+
+function isVideoPlaying(video) {
+    return video.currentTime > 0 && !video.paused && !video.ended && video.readyState > 2;
 }

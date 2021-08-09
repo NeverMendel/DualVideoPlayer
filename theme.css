@@ -1,0 +1,99 @@
+/* Remove arrows in input field */
+/* Chrome, Safari, Edge, Opera */
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+/* Firefox */
+input[type=number] {
+    -moz-appearance: textfield;
+}
+
+body {
+    transition: color .15s;
+}
+
+button {
+    color: black;
+    background: #f8f9fa;
+    border-color: black;
+}
+
+input{
+    color: black;
+    background-color: #f8f9fa;
+    border-width: 1px;
+    border-color: #eee;
+}
+
+[data-theme="dark"] {
+    color: white;
+    background-color: #222;
+}
+
+[data-theme="dark"] button{
+    color: white;
+    background-color: #2b2b2b;
+    border-color: #242424;
+}
+
+[data-theme="dark"] button:hover{
+    color: white;
+    background-color: #242424;
+}
+
+[data-theme="dark"] input{
+    color: white;
+    background-color: #2b2b2b;
+    border-color: #242424;
+}
+
+[data-theme="dark"] .svg-icon{
+    filter: brightness(0) invert(1);
+}
+
+/*html{*/
+/*    font-family: -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,"Noto Sans",sans-serif,"Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol","Noto Color Emoji";*/
+/*    font-weight: 400;*/
+/*    line-height: 1.5;*/
+/*    font-size: 16px;*/
+/*}*/
+
+/*body{*/
+/*    height: 100%;*/
+/*    text-align: center;*/
+/*    margin: 0;*/
+/*    color: #212529;*/
+/*    background: #fff;*/
+/*}*/
+
+/*.h1 h1{*/
+/*    font-size: 3rem;*/
+/*}*/
+
+/*.h1, .h2, .h3, .h4, .h5, .h6, h1, h2, h3, h4, h5, h6 {*/
+/*    margin-top: 0;*/
+/*    margin-bottom: .5rem;*/
+/*    font-weight: 500;*/
+/*    line-height: 1.2;*/
+/*}*/
+
+/*button, input, optgroup, select, textarea {*/
+/*    margin: 0;*/
+/*    font-family: inherit;*/
+/*    font-size: inherit;*/
+/*    line-height: inherit;*/
+/*}*/
+
+/*button {*/
+/*    padding: 1px 6px;*/
+/*}*/
+
+/*p {*/
+/*    display: block;*/
+/*    margin-block-start: 1em;*/
+/*    margin-block-end: 1em;*/
+/*    margin-inline-start: 0;*/
+/*    margin-inline-end: 0;*/
+/*}*/
