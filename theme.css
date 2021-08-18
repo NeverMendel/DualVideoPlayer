@@ -5,6 +5,7 @@ input::-webkit-inner-spin-button {
     -webkit-appearance: none;
     margin: 0;
 }
+
 /* Firefox */
 input[type=number] {
     -moz-appearance: textfield;
@@ -20,7 +21,7 @@ button {
     border-color: black;
 }
 
-input{
+input {
     color: black;
     background-color: #f8f9fa;
     border-width: 1px;
@@ -32,24 +33,24 @@ input{
     background-color: #222;
 }
 
-[data-theme="dark"] button{
+[data-theme="dark"] button {
     color: white;
     background-color: #2b2b2b;
     border-color: #242424;
 }
 
-[data-theme="dark"] button:hover{
+[data-theme="dark"] button:hover {
     color: white;
     background-color: #242424;
 }
 
-[data-theme="dark"] input{
+[data-theme="dark"] input {
     color: white;
     background-color: #2b2b2b;
     border-color: #242424;
 }
 
-[data-theme="dark"] .svg-icon{
+[data-theme="dark"] .svg-icon {
     filter: brightness(0) invert(1);
 }
 

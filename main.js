@@ -7,6 +7,7 @@ const URL = window.URL || window.webkitURL;
 let files = [];
 let updateInfoIntervalId;
 let webcamLinked = true;
+let videoSwapped = false;
 
 // Constants
 
@@ -45,8 +46,8 @@ playbackSpeedInput.addEventListener("change", changePlaybackSpeed);
 swapButton.addEventListener("click", swapVideos);
 
 showInfoButton.addEventListener("click", showInfo);
-hideWebcamButton.addEventListener("click", hideWebcam);
-hideMainButton.addEventListener("click", hideMain);
+hideWebcamButton.addEventListener("click", () => hideVideo(hideWebcamButton, webcamVideo, "webcam"));
+hideMainButton.addEventListener("click", () => hideVideo(hideMainButton, mainVideo, "main"));
 unlinkWebcamButton.addEventListener("click", unlinkWebcam);
 
 // Functions
@@ -62,6 +63,11 @@ function dragOverHandler(ev) {
 
 function dropHandler(ev) {
     ev.preventDefault();
+    if (window.location.href.indexOf("example.html") !== -1) {
+        alert("You cannot drop videos in the example page. You will be redirected to the main one, drop your videos there.");
+        window.location.href = window.location.href.replace("example.html", "index.html")
+        return;
+    }
     console.log('File(s) dropped');
     files = Array.from(ev.dataTransfer.files);
     if (files.length !== 2) {
@@ -109,8 +115,13 @@ function dropHandler(ev) {
 
 function updateStoredTime() {
     let info = {};
-    info.time = parseInt(mainVideo.currentTime);
-    info.offset = offsetInput.value;
+    if (!videoSwapped) {
+        info.time = parseInt(mainVideo.currentTime);
+        info.offset = offsetInput.value;
+    } else {
+        info.time = parseInt(webcamVideo.currentTime);
+        info.offset = -offsetInput.value;
+    }
     localStorage.setItem(files[0].name, JSON.stringify(info));
     // console.log("Saved video current time in browser local storage");
 }
@@ -160,6 +171,7 @@ function swapVideos() {
     webcamVideo.src = mainVideo.src;
     mainVideo.src = temp;
     offsetInput.value = -offsetInput.value;
+    videoSwapped = !videoSwapped;
     setTimeout(function () {
         mainVideo.currentTime = timeWebcamVideo;
         if (playing) mainVideo.play();
@@ -184,23 +196,13 @@ function updateInfo() {
         "Main video  : " + parseInt(mainVideo.currentTime) + "/" + parseInt(mainVideo.duration);
 }
 
-function hideWebcam() {
-    if (webcamVideo.style.display === 'none') {
-        webcamVideo.style.display = 'unset';
-        hideWebcamButton.innerHTML = "Hide webcam video";
+function hideVideo(button, video, videoSource) {
+    if (video.style.display === 'none') {
+        video.style.display = 'unset';
+        button.innerHTML = "Hide " + videoSource + " video";
     } else {
-        webcamVideo.style.display = 'none';
-        hideWebcamButton.innerHTML = "Show webcam video";
-    }
-}
-
-function hideMain() {
-    if (mainVideo.style.display === 'none') {
-        mainVideo.style.display = 'unset';
-        hideMainButton.innerHTML = "Hide main video";
-    } else {
-        mainVideo.style.display = 'none';
-        hideMainButton.innerHTML = "Show main video";
+        video.style.display = 'none';
+        button.innerHTML = "Show " + videoSource + " video";
     }
 }
 

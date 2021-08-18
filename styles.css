@@ -11,21 +11,20 @@ body {
     display: flex;
 }
 
-#player_div {
-    display: none;
-}
-
 .video_container {
     display: flex;
+    align-items: center;
 }
 
 #webcam_video {
-    width: 25%;
+    max-width: 25%;
+    height: 100%;
     pointer-events: none;
 }
 
 #main_video {
     max-width: 75%;
+    height: 100%;
 }
 
 .info_div {

@@ -16,6 +16,8 @@ Use the controls in the webpage to change the video settings.
 
 # Preview
 
+To preview the website without loading your videos you can go to the example webpage [here](https://nevermendel.github.io/DualVideoPlayer/example.html).
+
 Light mode:
 
 <img src="img/Light%20mode.png" alt="Light mode preview image" width="960">
