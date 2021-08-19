@@ -20,11 +20,11 @@ To preview the website without loading your videos you can go to the example web
 
 Light mode:
 
-<img src="img/Light%20mode.png" alt="Light mode preview image" width="960">
+<img src="img/light%20mode.png" alt="Light mode preview image" width="960">
 
 Dark mode:
 
-<img src="img/Dark%20mode.png" alt="Dark mode preview image" width="960">
+<img src="img/dark%20mode.png" alt="Dark mode preview image" width="960">
 
 ## License
 

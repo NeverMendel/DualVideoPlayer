@@ -1,0 +1,40 @@
+name: Update Website Screenshots
+
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  update-screenshots:
+    name: Update Screenshots
+    runs-on: ubuntu-latest
+    container: nevermendel/chrome-headless-screenshots
+
+    steps:
+      - name: Install git
+        run: apk add git
+
+      - name: Checkout project
+        uses: actions/checkout@v2
+
+      - name: List files in img folder
+        working-directory: img
+        run: ls -l
+
+      - name: Take screenshot light mode
+        run: take-screenshot.sh --outputDir=img --height=950 --filename="light mode" https://nevermendel.github.io/DualVideoPlayer/example.html
+
+      - name: Take screenshot dark mode
+        run: take-screenshot.sh --cookiesFile=dark-mode-cookies.json --outputDir=img --height=950 --filename="dark mode" https://nevermendel.github.io/DualVideoPlayer/example.html
+
+      - name: List files in img folder
+        working-directory: img
+        run: ls -l
+
+      - name: Commit images
+        run: |
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          git config --global user.name "github-actions[bot]"
+          git add img
+          git commit -m "Update website screenshots" && git push || echo "No changes to commit"
