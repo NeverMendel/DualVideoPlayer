@@ -5,6 +5,7 @@ html {
 body {
     height: 100%;
     text-align: center;
+    letter-spacing: normal;
 }
 
 .description_div {
