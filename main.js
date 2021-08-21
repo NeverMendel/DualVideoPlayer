@@ -6,6 +6,7 @@ const URL = window.URL || window.webkitURL;
 
 let files = [];
 let updateInfoIntervalId;
+let checkVideoInRangeIntervalId;
 let webcamLinked = true;
 let videoSwapped = false;
 
@@ -16,7 +17,6 @@ const LOAD_VIDEO_DELAY_MS = 300;
 // DOM Elements
 
 let dragHeader = document.getElementById("drag_header");
-// let dropZoneDiv = document.getElementById("drop_zone");
 let playerDiv = document.getElementById("player_div");
 let mainVideo = document.getElementById("main_video");
 let webcamVideo = document.getElementById("webcam_video");
@@ -27,6 +27,7 @@ let showInfoButton = document.getElementById("show_time_info_button");
 let hideWebcamButton = document.getElementById("hide_webcam_button");
 let hideMainButton = document.getElementById("hide_main_button");
 let unlinkWebcamButton = document.getElementById("unlink_webcam_button");
+let matchVideoEndButton = document.getElementById("set_offset_to_match_end_button");
 let offsetInput = document.getElementById("offset_input");
 let playbackSpeedInput = document.getElementById("playback_speed_input");
 let swapButton = document.getElementById("swap_button");
@@ -37,6 +38,7 @@ document.body.addEventListener("drop", dropHandler);
 document.body.addEventListener("dragover", dragOverHandler);
 
 mainVideo.addEventListener("pause", pauseVideo);
+mainVideo.addEventListener("ended", pauseVideo);
 mainVideo.addEventListener("play", playVideo);
 
 mainVideo.addEventListener("seeked", syncVideos);
@@ -49,6 +51,7 @@ showInfoButton.addEventListener("click", showInfo);
 hideWebcamButton.addEventListener("click", () => hideVideo(hideWebcamButton, webcamVideo, "webcam"));
 hideMainButton.addEventListener("click", () => hideVideo(hideMainButton, mainVideo, "main"));
 unlinkWebcamButton.addEventListener("click", unlinkWebcam);
+matchVideoEndButton.addEventListener("click", setOffsetToMatchVideoEnd)
 
 // Functions
 
@@ -143,19 +146,40 @@ function playVideo() {
 function syncVideos() {
     if (webcamLinked) {
         let playing = isVideoPlaying(mainVideo);
-        if (playing)
-            mainVideo.pause();
+        mainVideo.pause();
+        webcamVideo.pause();
         let timeMainVideo = mainVideo.currentTime;
         let timeWebcamVideo = timeMainVideo + parseInt(offsetInput.value);
-        webcamVideo.currentTime = timeWebcamVideo >= 0 && timeWebcamVideo <= webcamVideo.duration ? timeWebcamVideo : 0;
-        if (playing)
+        if(timeWebcamVideo >= 0 && timeWebcamVideo <= webcamVideo.duration){
+            webcamVideo.currentTime = timeWebcamVideo;
+        } else {
+            webcamLinked = false;
+            unlinkWebcamButton.disabled = true;
+            webcamVideo.currentTime = 0;
+            checkVideoInRangeIntervalId = setInterval(checkVideoInRange, 100);
+        }
+        if (playing) {
             mainVideo.play();
+            webcamVideo.play();
+        }
         console.groupCollapsed("Videos synced");
         console.log("Main video time: " + timeMainVideo);
         console.log("Computed webcam video time: " + timeMainVideo);
         console.log("Offset: " + offsetInput.value);
         console.log("Webcam video duration: " + webcamVideo.duration);
         console.groupEnd();
+    }
+}
+
+function checkVideoInRange(){
+    let timeMainVideo = mainVideo.currentTime;
+    let timeWebcamVideo = timeMainVideo + parseInt(offsetInput.value);
+    if(timeWebcamVideo >= 0 && timeWebcamVideo <= webcamVideo.duration){
+        webcamLinked = true;
+        unlinkWebcamButton.disabled = false;
+        webcamVideo.currentTime = timeWebcamVideo;
+        webcamVideo.play();
+        clearInterval(checkVideoInRangeIntervalId);
     }
 }
 
@@ -218,6 +242,11 @@ function unlinkWebcam() {
         if (!mainVideo.paused) webcamVideo.play();
         unlinkWebcamButton.innerHTML = "Freeze and unlink webcam video";
     }
+}
+
+function setOffsetToMatchVideoEnd(){
+    offsetInput.value = round(webcamVideo.duration - mainVideo.duration, 1);
+    syncVideos();
 }
 
 function isVideoPlaying(video) {
