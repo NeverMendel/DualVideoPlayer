@@ -3,7 +3,7 @@ name: Update Website Screenshots
 on:
   push:
     branches:
-      - '*'
+      - "*"
   workflow_dispatch:
 
 jobs:
