@@ -74,7 +74,7 @@ function dropHandler(ev) {
     console.log('File(s) dropped');
     files = Array.from(ev.dataTransfer.files);
     if (files.length !== 2) {
-        alert("You need to drag two and only two videos");
+        alert("You need to drop exactly two videos");
         return;
     }
     files.sort(function (a, b) {
@@ -93,19 +93,18 @@ function dropHandler(ev) {
     }
 
     let storedItem = localStorage.getItem(files[0].name);
-
-    if (storedItem) {
-        let info = JSON.parse(storedItem);
-        setTimeout(function () {
-            offsetInput.value = info.offset;
-            mainVideo.currentTime = info.time;
-            mainVideo.play();
-        }, LOAD_VIDEO_DELAY_MS);
-    } else {
-        setTimeout(function () {
-            mainVideo.play();
-        }, LOAD_VIDEO_DELAY_MS);
+    let playbackInfo;
+    if(storedItem){
+        playbackInfo = JSON.parse(storedItem);
     }
+
+    setTimeout(function () {
+        if(playbackInfo){
+            offsetInput.value = playbackInfo.offset;
+            mainVideo.currentTime = playbackInfo.time;
+        }
+        mainVideo.play();
+    }, LOAD_VIDEO_DELAY_MS);
 
     setInterval(updateStoredTime, 5000);
 
